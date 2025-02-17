@@ -1,15 +1,10 @@
-import requests
+import pandas as pd
 
+files = ["./question_tags.csv", "./questions.csv"]  # Replace with actual file names
+count = 0
 
-GITHUB_USERNAME = "met-ad-688"
-url = f"https://github.com/met-ad-688/assignment-01-yasmineelkattan"
+for file in files:
+    df = pd.read_csv(file)
+    count += df.apply(lambda row: row.astype(str).str.contains("GitHub", case=False).any(), axis=1).sum()
 
-try:
-    response = requests.get(url)
-    response.raise_for_status() 
-
-    repos = response.json()
-    print(f"Total GitHub repositories: {len(repos)}")
-
-except requests.exceptions.RequestException as e:
-    print(f"Error fetching repositories: {e}")
+print(f"Total lines containing 'GitHub': {count}")
